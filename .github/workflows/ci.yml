@@ -21,6 +21,8 @@ jobs:
           - '3306:3306'
         options: >-
           --health-cmd "mysqladmin ping -ptempdbpassword" --health-interval 10s --health-start-period 10s --health-timeout 5s --health-retries 10
+
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -35,6 +37,7 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
       - name: Write config file
         run: |
           echo "module.exports = {
@@ -54,6 +57,7 @@ jobs:
               apiKey: '${{ secrets.FACTORY_API_KEY }}',
             },
           };" > src/config.js
+
       - name: Tests
         run: npm test
 
@@ -63,6 +67,7 @@ jobs:
           version=$(date +'%Y%m%d.%H%M%S')
           echo "version=$version" >> "$GITHUB_OUTPUT"
           printf '{"version": "%s" }' "$version" > src/version.json
+
       - name: Update coverage
         run: |
           coverage=$(jq '.total.lines.pct' coverage/coverage-summary.json)
