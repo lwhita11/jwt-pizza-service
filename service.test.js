@@ -229,7 +229,7 @@ test('Franchise', async () => {
         password: user.password
     }).set('Content-Type', 'application/json');
 
-    token = getLoginRes.body.token;
+    const token = getLoginRes.body.token;
 
     const filePath = path.join(__dirname, './picture.png');
 
