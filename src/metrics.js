@@ -36,6 +36,10 @@ setInterval(() => {
   sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
 }, 10000); // Sends metrics every 10 seconds
 
+function stopMetrics() {
+    clearInterval(metricsInterval);
+  }
+
 // Function to send metrics to Grafana
 function sendMetricToGrafana(metricName, metricValue, type, unit) {
   const metric = {
@@ -99,4 +103,4 @@ function getMemoryUsagePercentage() {
   return (((totalMemory - freeMemory) / totalMemory) * 100).toFixed(2);
 }
 
-module.exports = { requestTracker };
+module.exports = { requestTracker, stopMetrics };
