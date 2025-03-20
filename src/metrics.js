@@ -47,11 +47,13 @@ function startMetrics() {
     }, 10000);
   }
 }
-function stopMetrics() {
-  if (metricsInterval) {
-    clearInterval(metricsInterval);
-    metricsInterval = null;
-  }
+async function stopMetrics() {
+    if (metricsInterval) {
+        clearInterval(metricsInterval);
+        metricsInterval = null;
+      }
+    
+      await pushMetrics();
 }
 
 // Function to send metrics to Grafana
