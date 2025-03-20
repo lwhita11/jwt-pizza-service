@@ -1,4 +1,4 @@
-const config = require('./config');
+const config = require('./config.js');
 const fetch = require('node-fetch');
 const os = require('os');
 
@@ -72,6 +72,12 @@ function sendMetricToGrafana(metricName, metricValue, type, unit) {
                     {
                         asDouble: parseFloat(metricValue),
                         timeUnixNano: Date.now() * 1000000,
+                        "attributes": [
+                            {
+                               "key": "source",
+                               "value": { "stringValue": "jwt-pizza-service" }
+                            }
+                         ]
                     },
                   ],
                 },
