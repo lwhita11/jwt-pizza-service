@@ -30,7 +30,7 @@ test('Register', async () => {
         const result1 = await connection.query("SHOW DATABASES LIKE 'pizza'");
         expect(result1.length).toBeGreaterThan(0);
     } finally {
-        connection.end();
+        await connection.end();
     }
 
     const getRegRes = await request(app).post('/api/auth').send({
