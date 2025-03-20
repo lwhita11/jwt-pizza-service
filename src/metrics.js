@@ -28,13 +28,13 @@ function requestTracker(req, res, next) {
   next();
 }
 
-// Periodically send metrics to Grafana
-setInterval(() => {
-  sendMetricToGrafana('requests', requestCounts.TOTAL, 'sum', '1');
-  sendMetricToGrafana('latency', totalLatency, 'sum', 'ms');
-  sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
-  sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
-}, 10000); // Sends metrics every 10 seconds
+// // Periodically send metrics to Grafana
+// setInterval(() => {
+//   sendMetricToGrafana('requests', requestCounts.TOTAL, 'sum', '1');
+//   sendMetricToGrafana('latency', totalLatency, 'sum', 'ms');
+//   sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
+//   sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
+// }, 10000); // Sends metrics every 10 seconds
 
 let metricsInterval;
 function startMetrics() {
@@ -47,13 +47,13 @@ function startMetrics() {
     }, 10000);
   }
 }
-async function stopMetrics() {
+
+function stopMetrics() {
     if (metricsInterval) {
         clearInterval(metricsInterval);
         metricsInterval = null;
       }
     
-      await pushMetrics();
 }
 
 // Function to send metrics to Grafana
