@@ -36,19 +36,23 @@ setInterval(() => {
   sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
 }, 10000); // Sends metrics every 10 seconds
 
-let metricsInterval = setInterval(() => {
-    sendMetricToGrafana('requests', requestCounts.TOTAL, 'sum', '1');
-    sendMetricToGrafana('latency', totalLatency / (requestCounts.TOTAL || 1), 'gauge', 'ms');
-    sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
-    sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
-  
-    requestCounts = { GET: 0, POST: 0, PUT: 0, DELETE: 0, TOTAL: 0 };
-    totalLatency = 0;
-  }, 10000);
-
-function stopMetrics() {
-    clearInterval(metricsInterval);
+let metricsInterval;
+function startMetrics() {
+  if (!metricsInterval) {
+    metricsInterval = setInterval(() => {
+      sendMetricToGrafana('requests', requestCounts.TOTAL, 'sum', '1');
+      sendMetricToGrafana('latency', totalLatency, 'sum', 'ms');
+      sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
+      sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
+    }, 10000);
   }
+}
+function stopMetrics() {
+  if (metricsInterval) {
+    clearInterval(metricsInterval);
+    metricsInterval = null;
+  }
+}
 
 // Function to send metrics to Grafana
 function sendMetricToGrafana(metricName, metricValue, type, unit) {
@@ -113,4 +117,4 @@ function getMemoryUsagePercentage() {
   return (((totalMemory - freeMemory) / totalMemory) * 100).toFixed(2);
 }
 
-module.exports = { requestTracker, stopMetrics };
+module.exports = { requestTracker, startMetrics, stopMetrics };

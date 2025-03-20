@@ -2,13 +2,17 @@ const request = require('supertest');
 const app = require('./src/service');
 const path = require('path');
 const fs = require('fs');
-const { stopMetrics } = require('../src/metrics');
+const { stopMetrics, startMetrics } = require('./src/metrics.js');
 
-const { Role, DB } = require('./src/database/database.js');
+beforeAll(() => {
+  startMetrics(); 
+});
 
 afterAll(() => {
-    stopMetrics();
-  });
+  stopMetrics(); 
+});
+
+const { Role, DB } = require('./src/database/database.js');
 
 async function createAdminUser() {
   let user = { password: 'toomanysecrets', roles: [{ role: Role.Admin }] };
