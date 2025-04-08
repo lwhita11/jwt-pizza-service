@@ -50,7 +50,7 @@ app.use('*', (req, res) => {
 });
 
 // Default error handler for all exceptions and errors.
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   logger.log('error', 'exception', {
     path: req.originalUrl,
     method: req.method,
