@@ -28,6 +28,24 @@ function requestTracker(req, res, next) {
   next();
 }
 
+function sendMetricsPeriodically(period) {
+  const timer = setInterval(() => {
+    try {
+      const buf = new MetricBuilder();
+      httpMetrics(buf);
+      systemMetrics(buf);
+      userMetrics(buf);
+      purchaseMetrics(buf);
+      authMetrics(buf);
+
+      const metrics = buf.toString('\n');
+      this.sendMetricToGrafana(metrics);
+    } catch (error) {
+      console.log('Error sending metrics', error);
+    }
+  }, period);
+}
+
 // // Periodically send metrics to Grafana
 // setInterval(() => {
 //   sendMetricToGrafana('requests', requestCounts.TOTAL, 'sum', '1');
