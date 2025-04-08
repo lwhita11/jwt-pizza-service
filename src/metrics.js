@@ -44,7 +44,7 @@ function startMetrics() {
       sendMetricToGrafana('latency', totalLatency, 'sum', 'ms');
       sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
       sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
-    }, 10000);
+    }, 100000);
   }
 }
 
