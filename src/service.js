@@ -5,10 +5,12 @@ const franchiseRouter = require('./routes/franchiseRouter.js');
 const version = require('./version.json');
 const config = require('./config.js');
 const metrics = require('./metrics.js');
+const logger = require('./logger.js');
 
 const app = express();
 app.use(metrics.requestTracker);
 metrics.startMetrics();
+app.use(logger.httpLogger);
 app.use(express.json());
 app.use(setAuthUser);
 app.use((req, res, next) => {
@@ -49,8 +51,13 @@ app.use('*', (req, res) => {
 
 // Default error handler for all exceptions and errors.
 app.use((err, req, res, next) => {
-  res.status(err.statusCode ?? 500).json({ message: err.message, stack: err.stack });
-  next();
+  logger.log('error', 'exception', {
+    path: req.originalUrl,
+    method: req.method,
+    message: err.message,
+    stack: err.stack,
+  });
+  res.status(err.statusCode ?? 500).json({ message: err.message });
 });
 
 module.exports = app;
