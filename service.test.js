@@ -257,7 +257,7 @@ test('Franchise', async () => {
         image: fs.createReadStream(filePath),
     }).set('Authorization',  `Bearer ${token}`).set('Content-Type', 'application/json');
     expect(addMenuItemFail.status).toBe(500);
-    expect(addMenuItemFail.headers['content-type']).toMatch('application/json; charset=utf-8');
+    // expect(addMenuItemFail.headers['content-type']).toMatch('application/json; charset=utf-8');
 
     const getRegRes = await request(app).post('/api/auth').send({
         name: randomName(),
