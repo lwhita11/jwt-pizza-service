@@ -71,6 +71,8 @@ function startMetrics() {
       requestCounts.Put = 0;
       requestCounts.DELETE = 0;
       requestCounts.TOTAL = 0;
+      revenue = 0.0;
+      totalLatency = 0;
     }, 100000);
   }
 }
