@@ -12,9 +12,10 @@ let requestCounts = {
 
 let totalLatency = 0;
 let currentUsers = 0;
-let authAttempts = 0;
+let successes = 0;
 let pizzas = 0;
 let failures = 0;
+let authFailures = 0;
 let revenue = 0.0;
 
 // Middleware to track request metrics
@@ -56,13 +57,20 @@ function startMetrics() {
       sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
       sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
       sendMetricToGrafana('current_users', currentUsers, 'gauge', 'count');
-      sendMetricToGrafana('auth_attempts_per_minute', authAttempts, 'sum', 'count');
+      sendMetricToGrafana('successes', successes, 'sum', 'count');
       sendMetricToGrafana('pizzas_per_minute', pizzas, 'sum', 'count');
       sendMetricToGrafana('failures', failures, 'sum', 'count');
+      sendMetricToGrafana('authFailures', authFailures, 'sum', 'count');
       sendMetricToGrafana('revenue_per_minute', revenue, 'sum', 'count');
       authAttempts = 0;
       pizzas = 0;
       failures = 0;
+      authFailures = 0;
+      requestCounts.GET = 0;
+      requestCounts.POST = 0;
+      requestCounts.Put = 0;
+      requestCounts.DELETE = 0;
+      requestCounts.TOTAL = 0;
     }, 100000);
   }
 }
@@ -75,12 +83,16 @@ function stopMetrics() {
     
 }
 
-function incrementAuthAttempts() {
-  authAttempts++;
+function incrementSuccesses() {
+  successes++;
 }
 
 function incrementPizzas() {
   pizzas++;
+}
+
+function incrementAuthFailures() {
+  authFailures++;
 }
 
 function incrementFailures() {
@@ -96,7 +108,7 @@ function incrementUsers() {
 }
 
 function decrementUsers() {
-  currentUsers--;
+  currentUsers = Math.max(currentUsers - 1, 0);
 }
 
 // Function to send metrics to Grafana
@@ -168,4 +180,4 @@ function getMemoryUsagePercentage() {
   return (((totalMemory - freeMemory) / totalMemory) * 100).toFixed(2);
 }
 
-module.exports = { requestTracker, startMetrics, stopMetrics, incrementAuthAttempts, incrementPizzas, incrementFailures, incrementRevenue, incrementUsers, decrementUsers };
+module.exports = { requestTracker, startMetrics, stopMetrics, incrementSuccesses, incrementPizzas, incrementFailures, incrementAuthFailures, incrementRevenue, incrementUsers, decrementUsers };
