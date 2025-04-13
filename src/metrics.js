@@ -68,7 +68,7 @@ function startMetrics() {
       authFailures = 0;
       requestCounts.GET = 0;
       requestCounts.POST = 0;
-      requestCounts.Put = 0;
+      requestCounts.PUT = 0;
       requestCounts.DELETE = 0;
       requestCounts.TOTAL = 0;
       revenue = 0.0;
