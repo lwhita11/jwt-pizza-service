@@ -11,6 +11,11 @@ let requestCounts = {
 };
 
 let totalLatency = 0;
+let currentUsers = 0;
+let authAttempts = 0;
+let pizzas = 0;
+let failures = 0;
+let revenue = 0.0;
 
 // Middleware to track request metrics
 function requestTracker(req, res, next) {
@@ -23,6 +28,8 @@ function requestTracker(req, res, next) {
 
     requestCounts[req.method] = (requestCounts[req.method] || 0) + 1;
     requestCounts.TOTAL++;
+    if (req.path.includes('/login')) currentUsers++;
+    if (req.path.includes('/logout')) currentUsers = Math.max(0, currentUsers - 1);
   });
 
   next();
@@ -41,9 +48,21 @@ function startMetrics() {
   if (!metricsInterval) {
     metricsInterval = setInterval(() => {
       sendMetricToGrafana('requests', requestCounts.TOTAL, 'sum', '1');
+      sendMetricToGrafana('Get requests', requestCounts.GET, 'sum', '1');
+      sendMetricToGrafana('Post requests', requestCounts.POST, 'sum', '1');
+      sendMetricToGrafana('PUT requests', requestCounts.PUT, 'sum', '1');
+      sendMetricToGrafana('Delete requests', requestCounts.DELETE, 'sum', '1');
       sendMetricToGrafana('latency', totalLatency, 'sum', 'ms');
       sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
       sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
+      sendMetricToGrafana('current_users', currentUsers, 'gauge', 'count');
+      sendMetricToGrafana('auth_attempts_per_minute', authAttempts, 'sum', 'count');
+      sendMetricToGrafana('pizzas_per_minute', pizzas, 'sum', 'count');
+      sendMetricToGrafana('failures', failures, 'sum', 'count');
+      sendMetricToGrafana('revenue_per_minute', revenue, 'sum', 'count');
+      authAttempts = 0;
+      pizzas = 0;
+      failures = 0;
     }, 100000);
   }
 }
@@ -54,6 +73,22 @@ function stopMetrics() {
         metricsInterval = null;
       }
     
+}
+
+function incrementAuthAttempts() {
+  authAttempts++;
+}
+
+function incrementPizzas() {
+  pizzas++;
+}
+
+function incrementFailures() {
+  failures++;
+}
+
+function incrementRevenue(value) {
+  revenue = revenue + value;
 }
 
 // Function to send metrics to Grafana
@@ -125,4 +160,4 @@ function getMemoryUsagePercentage() {
   return (((totalMemory - freeMemory) / totalMemory) * 100).toFixed(2);
 }
 
-module.exports = { requestTracker, startMetrics, stopMetrics };
+module.exports = { requestTracker, startMetrics, stopMetrics, incrementAuthAttempts, incrementPizzas, incrementFailures, incrementRevenue };
