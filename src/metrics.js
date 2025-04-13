@@ -91,6 +91,14 @@ function incrementRevenue(value) {
   revenue = revenue + value;
 }
 
+function incrementUsers() {
+  currentUsers++;
+}
+
+function decrementUsers() {
+  currentUsers--;
+}
+
 // Function to send metrics to Grafana
 function sendMetricToGrafana(metricName, metricValue, type, unit) {
   const metric = {
@@ -160,4 +168,4 @@ function getMemoryUsagePercentage() {
   return (((totalMemory - freeMemory) / totalMemory) * 100).toFixed(2);
 }
 
-module.exports = { requestTracker, startMetrics, stopMetrics, incrementAuthAttempts, incrementPizzas, incrementFailures, incrementRevenue };
+module.exports = { requestTracker, startMetrics, stopMetrics, incrementAuthAttempts, incrementPizzas, incrementFailures, incrementRevenue, incrementUsers, decrementUsers };
