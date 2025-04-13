@@ -12,7 +12,7 @@ let requestCounts = {
 
 let totalLatency = 0;
 let currentUsers = 0;
-let successes = 0;
+let authSuccesses = 0;
 let pizzas = 0;
 let failures = 0;
 let authFailures = 0;
@@ -62,7 +62,7 @@ function startMetrics() {
       sendMetricToGrafana('failures', failures, 'sum', 'count');
       sendMetricToGrafana('authFailures', authFailures, 'sum', 'count');
       sendMetricToGrafana('revenue_per_minute', revenue, 'sum', 'count');
-      authAttempts = 0;
+      authSuccesses = 0;
       pizzas = 0;
       failures = 0;
       authFailures = 0;
@@ -84,7 +84,7 @@ function stopMetrics() {
 }
 
 function incrementSuccesses() {
-  successes++;
+  authSuccesses++;
 }
 
 function incrementPizzas() {
