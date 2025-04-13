@@ -57,9 +57,9 @@ function startMetrics() {
       sendMetricToGrafana('cpu', getCpuUsagePercentage(), 'gauge', '%');
       sendMetricToGrafana('memory', getMemoryUsagePercentage(), 'gauge', '%');
       sendMetricToGrafana('current_users', currentUsers, 'gauge', 'count');
-      sendMetricToGrafana('successes', successes, 'sum', 'count');
+      sendMetricToGrafana('auth_successes', authSuccesses, 'sum', 'count');
       sendMetricToGrafana('pizzas_per_minute', pizzas, 'sum', 'count');
-      sendMetricToGrafana('failures', failures, 'sum', 'count');
+      sendMetricToGrafana('pizza_failures', failures, 'sum', 'count');
       sendMetricToGrafana('authFailures', authFailures, 'sum', 'count');
       sendMetricToGrafana('revenue_per_minute', revenue, 'sum', 'count');
       authSuccesses = 0;
